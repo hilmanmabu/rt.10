@@ -732,96 +732,6 @@
             } catch (err) { showToast("Gagal kirim pesan.", true); }
         }
 
-        // ================= E-VOTING / POLLING MUSYAWARAH =================
-        let activePollDoc = null;
-
-        window.loadPollingUtama = async function() {
-            const cont = document.getElementById('pollingHomeContainer'); if(!cont || !auth.currentUser) return;
-            try {
-                const s = await getDocs(query(collection(db, 'artifacts', appId, 'polling'), orderBy('timestamp', 'desc')));
-                if (s.empty) { cont.classList.add('hidden'); return; }
-                
-                activePollDoc = { id: s.docs[0].id, ...s.docs[0].data() };
-                cont.classList.remove('hidden');
-                document.getElementById('pollHomeTitle').innerText = activePollDoc.judul || 'Musyawarah Warga';
-                
-                const opsiList = activePollDoc.opsi || [];
-                const votesMap = activePollDoc.votes || {};
-                const myVote = votesMap[auth.currentUser.uid];
-                const totalSuara = Object.keys(votesMap).length;
-                document.getElementById('pollHomeTotal').innerText = `Total Partisipasi: ${totalSuara} suara warga`;
-
-                let h = '';
-                opsiList.forEach((op, idx) => {
-                    const countOpsi = Object.values(votesMap).filter(v => v === op).length;
-                    const persen = totalSuara > 0 ? Math.round((countOpsi / totalSuara) * 100) : 0;
-                    const isMyChoice = myVote === op;
-
-                    h += `<div onclick="kirimSuaraPolling('${ idx }')" class="bg-white border ${isMyChoice ? 'border-purple-600 ring-2 ring-purple-200' : 'border-purple-200'} rounded-xl p-2.5 cursor-pointer hover:bg-purple-50/40 transition relative overflow-hidden">
-                            <div class="flex justify-between items-center text-xs font-semibold text-gray-800 mb-1 relative z-10">
-                                <span>${isMyChoice ? '<i class="fa-solid fa-circle-check text-purple-600 mr-1"></i>' : ''}${op}</span>
-                                <span class="text-[11px] font-bold text-purple-700">${persen}% (${countOpsi})</span>
-                            </div>
-                            <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                                <div class="bg-purple-600 h-full transition-all duration-500" style="width: ${persen}%"></div>
-                            </div>
-                          </div>`;
-                });
-                document.getElementById('pollHomeOptions').innerHTML = h;
-            } catch(e) { cont.classList.add('hidden'); }
-        };
-
-        window.kirimSuaraPolling = async function(opsiIdx) {
-            if (!activePollDoc || !auth.currentUser) return;
-            const pilihan = activePollDoc.opsi[Number(opsiIdx)];
-            if (!pilihan) return;
-            try {
-                const fieldVote = `votes.${auth.currentUser.uid}`;
-                await updateDoc(doc(db, 'artifacts', appId, 'polling', activePollDoc.id), { [fieldVote]: pilihan });
-                showToast(`🗳️ Suara Anda ("${pilihan}") berhasil direkam!`);
-                loadPollingUtama();
-            } catch(e) { showToast("Gagal menyimpan suara.", true); }
-        };
-
-        window.buatPollingBaru = async function() {
-            const jEl = document.getElementById('pollJudulInput'); const oEl = document.getElementById('pollOpsiInput');
-            const judul = jEl ? jEl.value.trim() : '';
-            const opsiRaw = oEl ? oEl.value.split(',').map(s => s.trim()).filter(Boolean) : [];
-            if (!judul || opsiRaw.length < 2) return showToast("Isi judul dan minimal 2 pilihan (pisahkan dengan koma)!", true);
-            try {
-                await addDoc(collection(db, 'artifacts', appId, 'polling'), { judul: judul, opsi: opsiRaw, votes: {}, timestamp: Date.now() });
-                if(jEl) jEl.value = ''; if(oEl) oEl.value = '';
-                showToast("e-Voting berhasil diterbitkan!");
-                loadAdminPolling(); loadPollingUtama();
-            } catch(e) { showToast("Gagal membuat polling.", true); }
-        };
-
-        window.loadAdminPolling = async function() {
-            const cont = document.getElementById('adminPollingList'); if(!cont) return;
-            cont.innerHTML = 'Loading...';
-            try {
-                const s = await getDocs(query(collection(db, 'artifacts', appId, 'polling'), orderBy('timestamp', 'desc')));
-                let h = '';
-                s.forEach(d => {
-                    const p = d.data();
-                    const total = p.votes ? Object.keys(p.votes).length : 0;
-                    h += `<div class="p-3 border rounded-xl bg-white flex justify-between items-center">
-                            <div>
-                                <h4 class="font-bold text-sm text-gray-800">${p.judul}</h4>
-                                <p class="text-[11px] text-gray-500">Opsi: ${(p.opsi||[]).join(', ')} • <b>${total} Suara</b></p>
-                            </div>
-                            <button onclick="hapusPolling('${d.id}')" class="w-8 h-8 bg-red-50 text-red-500 rounded-full flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
-                          </div>`;
-                });
-                cont.innerHTML = h || '<p class="text-xs text-gray-500 text-center">Belum ada e-Voting aktif.</p>';
-            } catch(e) { cont.innerHTML = 'Gagal memuat.'; }
-        };
-
-        window.hapusPolling = async function(id) {
-            if(!confirm("Hapus polling ini?")) return;
-            try { await deleteDoc(doc(db, 'artifacts', appId, 'polling', id)); showToast("Polling dihapus."); loadAdminPolling(); loadPollingUtama(); } catch(e) {}
-        };
-
         // ================= PASAR UMKM =================
         window.openUmkmModal = () => { loadUmkmWarga(); showModal('umkmModal', 'umkmModalContent'); }
         window.toggleUmkmForm = (show) => { 
@@ -1132,8 +1042,6 @@
                 s.docChanges().forEach(c => { if(c.type==='added') { loadPengumumanUtama(); const isRT = window.currentUserData && window.currentUserData.role === 'Admin RT'; if(!isRT) kirimNotifikasiPesan(`Pengumuman RT`, c.doc.data().judul); }});
             }, () => {}));
 
-            unSubs.push(onSnapshot(collection(db, 'artifacts', appId, 'polling'), () => { loadPollingUtama(); }, () => {}));
-
             unSubs.push(onSnapshot(doc(db, 'artifacts', appId, 'kas', 'config_sos'), (snap) => {
                 const d = snap.exists() ? snap.data() : { enabled: true };
                 isFiturSOSEnabled = d.enabled !== false;
@@ -1416,7 +1324,7 @@
             if(!isRT) return showToast("Akses ditolak.",true); showModal('adminModal', 'adminModalContent'); switchAdminTab('warga'); 
         }
         window.switchAdminTab = function(t) { 
-            ['Warga','Laporan','Iuran','Kas','Polling','Sos','Inventaris','Pengumuman'].forEach(x => { 
+            ['Warga','Laporan','Iuran','Kas','Sos','Inventaris','Pengumuman'].forEach(x => { 
                 const v = document.getElementById('admView'+x); const b = document.getElementById('tabAdm'+x); 
                 if(x.toLowerCase()===t){ if(v) v.classList.replace('hidden','block'); if(b) b.className="flex-1 whitespace-nowrap px-3 py-2 text-xs font-bold bg-white text-brand rounded-lg shadow-sm"; } 
                 else { if(v) v.classList.replace('block','hidden'); if(b) b.className="flex-1 whitespace-nowrap px-3 py-2 text-xs font-medium text-gray-500 rounded-lg"; } 
@@ -1425,7 +1333,6 @@
             else if(t==='laporan') loadAdminLaporan(); 
             else if(t==='pengumuman') loadAdminPengumuman(); 
             else if(t==='inventaris') loadAdminInventaris(); 
-            else if(t==='polling') loadAdminPolling();
             else if(t==='kas') loadBukuKas();
             else if(t==='iuran') loadAdminIuran();
         }
