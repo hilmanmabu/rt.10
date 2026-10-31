@@ -1,6 +1,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, enableIndexedDbPersistence, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'layanan-warga-rt10';
         const KETUA_RT_NAMA = "Ade Hilman Fatahillah";
@@ -18,7 +18,16 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         setPersistence(auth, browserLocalPersistence).catch(() => setPersistence(auth, inMemoryPersistence));
+const db = getFirestore(app);
 
+// MENGAKTIFKAN CACHE OFFLINE FIRESTORE
+enableIndexedDbPersistence(db).catch((err) => {
+    if (err.code === 'failed-precondition') {
+        console.log("Tab ganda terbuka, offline cache hanya jalan di satu tab.");
+    } else if (err.code === 'unimplemented') {
+        console.log("Browser tidak mendukung cache offline.");
+    }
+});
         const secondaryApp = initializeApp(firebaseConfig, "AdminHelperApp");
         const secondaryAuth = getAuth(secondaryApp);
         setPersistence(secondaryAuth, inMemoryPersistence).catch(() => {});
