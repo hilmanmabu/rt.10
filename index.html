@@ -305,19 +305,7 @@
                         <p class="text-xs text-blue-800" id="pengumumanIsi">Isi</p>
                     </div>
                 </div>
-
-                <!-- E-VOTING / POLLING MUSYAWARAH WARGA -->
-                <div id="pollingHomeContainer" class="px-4 sm:px-8 pb-3 hidden">
-                    <div class="bg-purple-50 border border-purple-200 rounded-2xl p-4 shadow-sm relative overflow-hidden">
-                        <div class="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-bl-lg"><i class="fa-solid fa-check-to-slot mr-1"></i>E-VOTING RT</div>
-                        <h3 class="font-bold text-purple-900 text-sm mb-1 pr-20" id="pollHomeTitle">Judul Polling</h3>
-                        <p class="text-[11px] text-purple-700 mb-3" id="pollHomeSub">Pilih salah satu opsi di bawah ini (1 Akun = 1 Suara):</p>
-                        <div id="pollHomeOptions" class="space-y-2"></div>
-                        <p class="text-[10px] text-purple-500 mt-2.5 font-semibold text-right" id="pollHomeTotal">Total: 0 suara</p>
-                    </div>
-                </div>
-
-                <!-- MENU LAYANAN -->
+               <!-- MENU LAYANAN -->
                 <div class="px-4 sm:px-8 pb-4 pt-1">
                     <h3 class="font-bold text-gray-800 mb-3.5 text-xs sm:text-sm uppercase tracking-wide">Menu Layanan</h3>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
@@ -606,7 +594,6 @@
                 <button id="tabAdmLaporan" onclick="switchAdminTab('laporan')" class="flex-1 whitespace-nowrap px-3 py-2 text-xs font-medium text-gray-500 rounded-lg">Laporan & Surat</button>
                 <button id="tabAdmIuran" onclick="switchAdminTab('iuran')" class="flex-1 whitespace-nowrap px-3 py-2 text-xs font-medium text-gray-500 rounded-lg">Kartu Iuran</button>
                 <button id="tabAdmKas" onclick="switchAdminTab('kas')" class="flex-1 whitespace-nowrap px-3 py-2 text-xs font-medium text-gray-500 rounded-lg">Buku Kas</button>
-                <button id="tabAdmPolling" onclick="switchAdminTab('polling')" class="flex-1 whitespace-nowrap px-3 py-2 text-xs font-medium text-gray-500 rounded-lg">e-Voting</button>
                 <button id="tabAdmSos" onclick="switchAdminTab('sos')" class="flex-1 whitespace-nowrap px-3 py-2 text-xs font-medium text-gray-500 rounded-lg">SOS Darurat</button>
                 <button id="tabAdmInventaris" onclick="switchAdminTab('inventaris')" class="flex-1 whitespace-nowrap px-3 py-2 text-xs font-medium text-gray-500 rounded-lg">Inventaris</button>
                 <button id="tabAdmPengumuman" onclick="switchAdminTab('pengumuman')" class="flex-1 whitespace-nowrap px-3 py-2 text-xs font-medium text-gray-500 rounded-lg">Pengumuman</button>
@@ -721,18 +708,6 @@
                     </div>
                     <h3 class="font-bold text-gray-700 text-sm mb-2 border-b pb-2">Riwayat Transaksi Kas</h3>
                     <div id="adminKasList" class="space-y-2"></div>
-                </div>
-
-                <!-- 5. e-Voting / Polling Musyawarah -->
-                <div id="admViewPolling" class="hidden">
-                    <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-5 space-y-2.5">
-                        <h3 class="font-bold text-purple-900 text-sm">Buat e-Voting / Polling Musyawarah</h3>
-                        <input type="text" id="pollJudulInput" placeholder="Judul Musyawarah (Misal: Jadwal Kerja Bakti Minggu Ini)" class="w-full px-3 py-2 rounded-lg border text-sm bg-white">
-                        <input type="text" id="pollOpsiInput" placeholder="Pilihan Opsi, pisahkan dengan koma (Misal: Sabtu Pagi, Minggu Pagi, Minggu Sore)" class="w-full px-3 py-2 rounded-lg border text-sm bg-white">
-                        <button onclick="buatPollingBaru()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 rounded-lg text-sm transition">Terbitkan e-Voting</button>
-                    </div>
-                    <h3 class="font-bold text-gray-700 text-sm mb-3 border-b pb-2">Daftar Polling Aktif</h3>
-                    <div id="adminPollingList" class="space-y-3"></div>
                 </div>
 
                 <!-- 6. Pengaturan SOS Darurat -->
