@@ -235,9 +235,8 @@
                     <button id="btnHeaderSOS" onclick="bukaModalSOS()" class="bg-red-600 hover:bg-red-700 text-white px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-bold shadow-md flex items-center gap-1 border border-white/40 animate-pulse transition">
                         <i class="fa-solid fa-bell"></i> <span>SOS</span>
                     </button>
-                    <button onclick="switchTab('chat')" class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition">
-                        <i class="fa-solid fa-comments text-base sm:text-lg"></i>
-                        <span id="headerChatBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-brand">0</span>
+                    <button onclick="switchTab('riwayat')" class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition">
+                        <i class="fa-solid fa-clock-rotate-left text-base sm:text-lg"></i>
                     </button>
                 </div>
             </div>
@@ -408,7 +407,6 @@
         <nav id="bottomNav" class="bg-white/95 backdrop-blur-md border-t border-gray-200 flex justify-around items-center pt-2.5 pb-safe-bottom shrink-0 z-30 w-full shadow-[0_-2px_10px_rgba(0,0,0,0.04)]">
             <button id="navBerandaBtn" onclick="switchTab('beranda')" class="flex flex-col items-center text-brand flex-1 py-0.5 active:scale-95 transition"><i class="fa-solid fa-house text-lg mb-1"></i><span class="text-[10px] sm:text-xs font-semibold">Beranda</span></button>
             <button id="navChatBtn" onclick="switchTab('chat')" class="relative flex flex-col items-center text-gray-400 flex-1 py-0.5 active:scale-95 transition"><i class="fa-solid fa-comments text-lg mb-1"></i><span class="text-[10px] sm:text-xs font-semibold">Obrolan</span><span id="navChatBadge" class="hidden absolute top-0 right-1/4 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span></button>
-            <button id="navRiwayatBtn" onclick="switchTab('riwayat')" class="flex flex-col items-center text-gray-400 flex-1 py-0.5 active:scale-95 transition"><i class="fa-solid fa-clock-rotate-left text-lg mb-1"></i><span class="text-[10px] sm:text-xs font-semibold">Riwayat</span></button>
             <button onclick="openProfileModal()" class="flex flex-col items-center text-gray-400 flex-1 py-0.5 active:scale-95 transition"><i class="fa-solid fa-user text-lg mb-1"></i><span class="text-[10px] sm:text-xs font-semibold">Profil</span></button>
             <button id="navAdminBtn" onclick="openAdminModal()" class="hidden flex-col items-center text-gray-400 hover:text-red-600 flex-1 py-0.5 active:scale-95 transition"><i class="fa-solid fa-users-gear text-lg mb-1"></i><span class="text-[10px] sm:text-xs font-semibold">Admin</span></button>
         </nav>
